@@ -9,9 +9,10 @@ function App() {
   // state to store the result of the anagram check
   const [result, setResult] = useState(false);
 
+  // selecting the first input in the dom
   const firstInputSelect = useRef()
   useEffect(() => {
-    console.log(firstInputSelect.current.focus())
+    firstInputSelect.current.focus(); // setting focus
   }, [])
 
   /**
