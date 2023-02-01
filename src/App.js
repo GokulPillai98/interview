@@ -1,48 +1,68 @@
-import logo from "./logo.svg";
 import "./App.css";
 import { useState } from "react";
 
 function App() {
-  const [stringOne, setStringOne] = useState("");
-  const [stringTwo, setStringTwo] = useState("");
-  const resut = useState(false);
+
+  const [stringOne, setStringOne] = useState(""); // form input 1 state 
+  const [stringTwo, setStringTwo] = useState(""); // form input 2 state
+  const [result, setResult] = useState(false); // result state
+  
+  /**
+   * Remove Punctuations And Spaces
+   * @param {*} string 
+   * @returns {boolean}
+   */
   const removePunctuationsAndSpaces = (string) => {
     return string.replace(/[.,'\/#!$%\^&\*;:{}=\-_`~() ]/g, "");
   };
-  const checkAnagram = () => {
-    const hashCheck = {};
-    let checkStringOne = removePunctuationsAndSpaces(stringOne);
-    let checkStringTwo = removePunctuationsAndSpaces(stringTwo);
-    console.log(checkStringOne, checkStringTwo);
-    if (checkStringOne.length && checkStringTwo.length) {
+
+
+/**
+ * checkAnagram takes two inputs and check whether both are anagrams or not.
+ * @author Gokul
+ * @param {string} [d=stringOne] - A optional string param
+ * @param {string} [d=stringTwo] - A optional string param
+ * @returns {boolean}
+ */
+  const checkAnagram = (checkStringOne = stringOne, checkStringTwo = stringTwo) => {
+
+    const stringOneHash = {};
+    const stringTwoHash = {};
+
+    checkStringOne = removePunctuationsAndSpaces(checkStringOne);
+    checkStringTwo = removePunctuationsAndSpaces(checkStringTwo);
+
+    if (checkStringOne.length && checkStringTwo.length) { 
       if (checkStringOne.length != checkStringTwo.length) {
-        return;
+        setResult(false)
+        return false;
       }
       checkStringOne = checkStringOne.toLowerCase();
       checkStringTwo = checkStringTwo.toLowerCase();
       const stringLength = checkStringOne.length;
       for (let i = 0; i < stringLength; i++) {
-        if (!(checkStringOne[i] in hashCheck)) {
-          hashCheck[checkStringOne[i]] = 1;
+        if (!(checkStringOne[i] in stringOneHash)) {
+          stringOneHash[checkStringOne[i]] = 1;
         } else {
-          console.log("test 1", hashCheck[checkStringTwo[i]]);
-          hashCheck[checkStringOne[i]] = hashCheck[checkStringOne[i]] + 1;
+          stringOneHash[checkStringOne[i]] += 1;
+        }
+        if (!(checkStringTwo[i] in stringTwoHash)) {
+          stringTwoHash[checkStringTwo[i]] = 1;
+        } else {
+          stringTwoHash[checkStringTwo[i]] += 1;
         }
       }
-      for (let i = 0; i < stringLength; i++) {
-        console.log((hashCheck[checkStringTwo[i]] += 1));
-      }
-      console.log(hashCheck);
-      let result = true;
-      for (let i = 0; i < stringLength; i++) {
-        console.log(hashCheck[checkStringOne[i]] % 2)
-        if (hashCheck[checkStringOne[i]] % 2 != 0) {
-          result = false;
+
+      let checkAnagram = true;
+      for (let key in stringOneHash) {
+        if (stringOneHash[key] != stringTwoHash[key]) { 
+          checkAnagram = false;
           break;
         }
       }
-      console.log(result);
+      setResult(checkAnagram)
     }
+    return checkAnagram;
   };
 
   return (
@@ -65,7 +85,7 @@ function App() {
           value={stringTwo}
         />
         <button onClick={checkAnagram}>Check</button>
-        <div></div>
+        <div>{result ? 'TRUE' : 'FALSE'}</div>
       </div>
     </div>
   );
